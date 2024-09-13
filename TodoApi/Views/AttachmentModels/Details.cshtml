@@ -1,0 +1,31 @@
+﻿@model AdminControl.Models.AttachmentModel
+
+@{
+    ViewData["Title"] = "تفاصيل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>تفاصيل</h1>
+
+<div>
+    <h4>موديل المرفق</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            الصوره
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.nameimage)
+        </dd>
+        <dt class="col-sm-2">
+         الاعلان
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ad.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">تحرير</a> |
+    <a asp-action="Index">العودة إلى القائمة</a>
+</div>

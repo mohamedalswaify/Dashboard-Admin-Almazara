@@ -1,0 +1,125 @@
+﻿@model AdminControl.Models.AdModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>AdModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Token" class="control-label"></label>
+                <input asp-for="Token" class="form-control" />
+                <span asp-validation-for="Token" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdTypeId" class="control-label"></label>
+                <select asp-for="AdTypeId" class ="form-control" asp-items="ViewBag.AdTypeId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AreaId" class="control-label"></label>
+                <select asp-for="AreaId" class ="form-control" asp-items="ViewBag.AreaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MobileNumber" class="control-label"></label>
+                <input asp-for="MobileNumber" class="form-control" />
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WhatsAppNumber" class="control-label"></label>
+                <input asp-for="WhatsAppNumber" class="form-control" />
+                <span asp-validation-for="WhatsAppNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameVideo" class="control-label"></label>
+                <input asp-for="NameVideo" class="form-control" />
+                <span asp-validation-for="NameVideo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="numberShow" class="control-label"></label>
+                <input asp-for="numberShow" class="form-control" />
+                <span asp-validation-for="numberShow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="numberOfWhatsApp" class="control-label"></label>
+                <input asp-for="numberOfWhatsApp" class="form-control" />
+                <span asp-validation-for="numberOfWhatsApp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="numberOfCall" class="control-label"></label>
+                <input asp-for="numberOfCall" class="form-control" />
+                <span asp-validation-for="numberOfCall" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Space" class="control-label"></label>
+                <input asp-for="Space" class="form-control" />
+                <span asp-validation-for="Space" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfRooms" class="control-label"></label>
+                <input asp-for="NumberOfRooms" class="form-control" />
+                <span asp-validation-for="NumberOfRooms" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfBathrooms" class="control-label"></label>
+                <input asp-for="NumberOfBathrooms" class="form-control" />
+                <span asp-validation-for="NumberOfBathrooms" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdStatusId" class="control-label"></label>
+                <input asp-for="AdStatusId" class="form-control" />
+                <span asp-validation-for="AdStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AddedDate" class="control-label"></label>
+                <input asp-for="AddedDate" class="form-control" />
+                <span asp-validation-for="AddedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublishDate" class="control-label"></label>
+                <input asp-for="PublishDate" class="form-control" />
+                <span asp-validation-for="PublishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

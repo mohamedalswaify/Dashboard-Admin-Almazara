@@ -1,0 +1,34 @@
+﻿@model AdminControl.Models.AttachmentModel
+
+@{
+    ViewData["Title"] = "حذف";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>حذف</h1>
+
+<h3>هل أنت متأكد أنك تريد حذف هذا؟</h3>
+<div>
+    <h4>موديل المرفق</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+           الصوره
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.nameimage)
+        </dd>
+        <dt class="col-sm-2">
+          الاعلان 
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ad.Id)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="حذف" class="btn btn-danger" /> |
+        <a asp-action="Index">العودة إلى القائمة</a>
+    </form>
+</div>

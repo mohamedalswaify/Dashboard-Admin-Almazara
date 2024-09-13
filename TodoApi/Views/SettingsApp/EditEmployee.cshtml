@@ -1,0 +1,81 @@
+﻿@model TodoApi.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">اضافة عميل</h5>
+
+            <!-- No Labels Form -->
+            <form class="row g-3" asp-action="EditEmployee">
+                <div class="col-md-12" hidden>
+                    <input id="empid" asp-for="Id"  class="form-control" placeholder="اسم المستخدم" required>
+                </div>
+                <div class="col-md-12">
+                    <input type="text" asp-for="Name" class="form-control" placeholder="اسم المستخدم" required>
+                </div>
+                <div class="col-md-12">
+                    <input type="email" id="email" asp-for="Email" class="form-control" placeholder="رقم الهاتف" required>
+                </div>
+                <div class="col-md-6">
+                    <input id="password" type="text" asp-for="Password" class="form-control" placeholder="كلمة المرور" required>
+                </div>
+                <div class="col-6">
+                    <input id="confirm" type="password" class="form-control" placeholder="تاكيد كلمة المرور" required>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="submit-btn" asp-action="Create" class="btn btn-primary">ارسال</button>
+                    <a asp-action="GetListEmployee" class="btn btn-secondary">عودة</a>
+                </div>
+            </form><!-- End No Labels Form -->
+
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#submit-btn').click(function (event) {
+            var password = $('#password').val();
+            var confirm = $('#confirm').val();
+            var email = $('#email').val();
+            var empid = $('#empid').val();
+
+
+            if (password !== confirm) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ !',
+                    text: 'كلمتا المرور غير متطابقتان'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: '/SettingsApp/CheckEmailEdit',
+                type: 'GET',
+                data: { email: email, empid: empid },
+                success: function (response) {
+                    if (response.exists) {
+                        event.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطأ!',
+                            text: 'قم بمراجعة البريد الالكترني'
+                        });
+                    } else {
+                        $('#submit-btn').closest('form').submit();
+                    }
+                }
+            });
+
+            event.preventDefault();
+        });
+    });
+</script>

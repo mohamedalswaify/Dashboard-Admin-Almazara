@@ -1,0 +1,139 @@
+﻿@model AdminControl.Models.AdModel
+
+@{
+    ViewData["Title"] = "التفاصيل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>التفاصيل</h1>
+
+<div>
+    <h4>موديل الإعلان</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            الرقم التعريفي
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            العنوان
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            الوصف
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            الفئة
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+        <dt class="col-sm-2">
+            نوع الإعلان
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AdType.Name)
+        </dd>
+        <dt class="col-sm-2">
+            السعر
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            المنطقة
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Area.Name)
+        </dd>
+        <dt class="col-sm-2">
+            رقم الجوال
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MobileNumber)
+        </dd>
+        <dt class="col-sm-2">
+            رقم واتساب
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.WhatsAppNumber)
+        </dd>
+        <dt class="col-sm-2">
+            اسم الفيديو
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NameVideo)
+        </dd>
+        <dt class="col-sm-2">
+            عدد المشاهدات
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.numberShow)
+        </dd>
+        <dt class="col-sm-2">
+            عدد المشاركات على واتساب
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.numberOfWhatsApp)
+        </dd>
+        <dt class="col-sm-2">
+            عدد المكالمات
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.numberOfCall)
+        </dd>
+        <dt class="col-sm-2">
+            المساحة
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Space)
+        </dd>
+        <dt class="col-sm-2">
+            عدد الغرف
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumberOfRooms)
+        </dd>
+        <dt class="col-sm-2">
+            عدد الحمامات
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumberOfBathrooms)
+        </dd>
+        <dt class="col-sm-2">
+            العميل
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.username)
+        </dd>
+        <dt class="col-sm-2">
+            حالة الإعلان
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AdStatus.Status)
+        </dd>
+        <dt class="col-sm-2">
+            تاريخ الإضافة
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AddedDate)
+        </dd>
+        <dt class="col-sm-2">
+            تاريخ النشر
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PublishDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">تعديل</a> |
+    <a asp-action="Index">الرجوع للقائمة</a>
+</div>

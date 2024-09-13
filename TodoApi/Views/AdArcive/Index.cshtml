@@ -1,0 +1,93 @@
+﻿@model IEnumerable<AdminControl.Models.AdModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>الاعلانات المؤرشفه  </h1>
+
+<p>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                الرقم التعريفي
+            </th>
+            <th>
+                العنوان
+            </th>
+            <th>
+                الوصف
+            </th>
+            <th>
+                الفئة
+            </th>
+            <th>
+                نوع الإعلان
+            </th>
+            <th>
+                المنطقة
+            </th>
+            <th>
+                العميل
+            </th>
+            <th>
+                حالة الإعلان
+            </th>
+            <th>
+                تاريخ الإضافة
+            </th>
+            <th>
+                تاريخ النشر
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdStatus.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AddedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublishDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">تعديل</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">تفاصيل</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,918 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@model IEnumerable<AdminControl.Models.AdModel>
+@inject BloggingContext context
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    DateTime dateTime = DateTime.Now;
+    var whait = ViewBag.whait as IEnumerable<AdModel>;
+    var Okay = ViewBag.Okay as IEnumerable<AdModel>;
+    var Reject = ViewBag.Reject as IEnumerable<AdModel>;
+}
+<style>
+    h3{
+        margin-top: 40px;
+        font-size: 30px;
+    }
+
+    .no-data {
+        text-align: center;
+        display: none;
+        font-weight: bold
+    }
+
+    .datatable-pagination-list .page-item.active .page-link {
+        background-color: #d9d9d9;
+        border-color: #d9d9d9;
+        color: #000;
+    }
+
+    .page-link {
+        border: none
+    }
+
+    .acti {
+        background: #d9d9d9 !important
+    }
+
+    .datatable-pagination a:hover, .datatable-pagination button:hover {
+        border: none !important
+    }
+
+    .sort-btn {
+        background: none;
+        border: none;
+        font-weight: bold;
+        position: relative
+    }
+
+        .sort-btn::before, .sort-btn::after {
+            content: "";
+            height: 0;
+            width: 0;
+            position: absolute;
+            right: -16px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            opacity: 0.2;
+            top: 20px;
+        }
+
+        .sort-btn::before {
+            border-top: 4px solid #000;
+            bottom: 0px !important;
+        }
+
+        .sort-btn::after {
+            border-bottom: 4px solid #000;
+            border-top: 4px solid transparent;
+            top: 0px !important;
+        }
+        table{
+        text-align: center !important;
+        }
+
+    
+
+    .box {
+        width: 40%;
+        margin: 0 auto;
+        background: rgba(255,255,255,0.2);
+        padding: 35px;
+        border: 2px solid #fff;
+        border-radius: 20px/50px;
+        background-clip: padding-box;
+        text-align: center;
+    }
+
+    .button {
+        font-size: 1em;
+        padding: 10px;
+        color: #fff;
+        border: 2px solid #4154f1;
+        border-radius: 20px/50px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+    }
+
+        .button:hover {
+            background: #4154f1;
+        }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 150ms;
+        visibility: hidden;
+        opacity: 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .overlay:target {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    .popup {
+        margin: 70px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        width: auto;
+        position: relative;
+    }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: justify;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+            .popup .close:hover {
+                color: #4154f1;
+            }
+
+        .popup .content {
+            max-height: 30%;
+        }
+
+    header, aside {
+        z-index: 0 !important
+    }
+
+    @@media screen and (max-width: 700px) {
+        .box {
+            width: 70%;
+        }
+
+        .popup {
+            width: 70%;
+        }
+    }
+    .fouces{
+        cursor:pointer
+    }
+</style>
+<div class="pagetitle">
+    <h1>الطلبات</h1>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">ادارة بيانات الطلبات</h5>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">الانتظار</button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">المقبول</button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-justified" type="button" role="tab" aria-controls="contact" aria-selected="false">مرفوض</button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" id="achive-tab" data-bs-toggle="tab" data-bs-target="#achive-justified" type="button" role="tab" aria-controls="contact" aria-selected="false">مؤرشف</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-2" id="myTabjustifiedContent">
+                            
+                            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="text-center">
+                                    <h3>الاعلانات تحت الانتظار</h3>
+                                </div>
+                                <div class="datatable-top">
+                                    <div class="datatable-dropdown" style="visibility:visible">
+                                        <a class="btn btn-warning" id="confirm">الموافقة على الاعلان</a>
+                                        <a class="btn btn-danger" id="reject">رفض الاعلان</a>
+                                    </div>
+                                    <div class="datatable-search">
+                                        <input class="datatable-input form-control" placeholder="Search..." type="search" title="Search within table">
+                                    </div>
+                                </div>
+                                <table class="table datatables">
+                                    <thead>
+                                        <tr>
+                                            <th><label for="cole">تحديد الكل</label><input id="cole" type="checkbox" /></th>
+                                            <th><button class="sort-btn">الرقم التعريفي</button></th>
+                                            <th><button class="sort-btn">العنوان</button></th>
+                                            <th><button class="sort-btn">الفئة</button></th>
+                                            <th><button class="sort-btn">نوع الإعلان</button></th>
+                                            <th><button class="sort-btn">المنطقة</button></th>
+                                            <th><button class="sort-btn">العميل</button></th>
+                                            <th><button class="sort-btn">العمليات</button></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        @foreach (var item in whait)
+                                        {
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" data-id="@item.Id" class="selectedcheck">
+                                                </th>
+                                                <td style="font-weight:100">
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AdType.Name)
+                                                </td>
+                                                <td>
+                                                    @item.Area.Name
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Customer.username)
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-gear text-success"></i></a>
+                                                    <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-file-text text-warning "></i></a>
+                                                    <a href="" class="delete-btn" data-id="@item.Id"><i class="bi bi-x-octagon-fill text-danger"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="no-data" style="display: none;">لا يوجد بيانات</div>
+                                <div style="display:flex">
+                                <nav class="datatable-pagination" id="datatable-pagination">
+                                    <ul class="datatable-pagination-list"></ul>
+                                </nav>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="text-center">
+                                    <h3>الاعلانات المقبولة</h3>
+                                </div>
+                                <table class="table datatable coooel">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                الرقم التعريفي
+                                            </th>
+                                            <th width="10%">
+                                                العنوان
+                                            </th>
+
+                                            <th>
+                                                الفئة
+                                            </th>
+                                            <th>
+                                                نوع الإعلان
+                                            </th>
+
+                                            <th>
+                                                المنطقة
+                                            </th>
+
+                                            <th>
+                                                العميل
+                                            </th>
+                                            <th>
+                                                تفاصيل الميديا
+                                            </th>
+                                            <th>العمليات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Okay)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AdType.Name)
+                                                </td>
+                                                <td>
+                                                    @item.Area.Name
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Customer.username)
+                                                </td>
+                                                <td>
+                                                    <a class="fouces" ><i class="bi bi-info-square-fill" style="color: #052d72;"></i></a>
+
+                                                    <div id="popup1" class="overlay">
+                                                        <div class="popup">
+                                                            <h2>تفــاصيل الميديا</h2>
+                                                            <h2>اسم الاعلان: @item.Title</h2>
+                                                            <a class="close" href="#">&times;</a>
+                                                            <div class="content">
+                                                                <table class="table table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>عدد المشاهدات</th>
+                                                                            <th> عدد المشاركات على واتساب</th>
+                                                                            <th> عدد المكالمات </th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>@item.numberShow</td>
+                                                                            <td>@item.numberOfWhatsApp</td>
+                                                                            <td>@item.numberOfCall</td>
+                                                                        </tr>
+
+                                                                    </thead>
+                                                                  </table>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-gear text-success"></i></a>
+                                                    <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-file-text text-warning "></i></a>
+                                                    <a href="" class="delete-btn" data-id="@item.Id"><i class="bi bi-x-octagon-fill text-danger"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="text-center">
+                                    <h3>الاعلانات المرفوضة</h3>
+                                </div>
+                                <table class="table datatable rejecttabel">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                الرقم التعريفي
+                                            </th>
+                                            <th width="10%">
+                                                العنوان
+                                            </th>
+
+                                            <th>
+                                                الفئة
+                                            </th>
+                                            <th>
+                                                نوع الإعلان
+                                            </th>
+
+                                            <th>
+                                                المنطقة
+                                            </th>
+
+                                            <th>
+                                                العميل
+                                            </th>
+                                            <th>العمليات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        @foreach (var item in Reject)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AdType.Name)
+                                                </td>
+                                                <td>
+                                                    @item.Area.Name
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Customer.username)
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-gear text-success"></i></a>
+                                                    <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-file-text text-warning "></i></a>
+                                                    <a href="" class="delete-btn" data-id="@item.Id"><i class="bi bi-x-octagon-fill text-danger"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="achive-justified" role="tabpanel" aria-labelledby="achive-tab">
+                                <div class="text-center">
+                                    <h3>الاعلانات المؤرشفة</h3>
+                                </div>
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                الرقم التعريفي
+                                            </th>
+                                            <th width="10%">
+                                                العنوان
+                                            </th>
+
+                                            <th>
+                                                الفئة
+                                            </th>
+                                            <th>
+                                                نوع الإعلان
+                                            </th>
+
+                                            <th>
+                                                المنطقة
+                                            </th>
+
+                                            <th>
+                                                العميل
+                                            </th>
+                                            <th>
+                                                تفاصيل الميديا
+                                            </th>
+                                            <th>العمليات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AdType.Name)
+                                                </td>
+                                                <td>
+                                                    @item.Area.Name
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Customer.username)
+                                                </td>
+                                                <td>
+                                                    <a class="fouces"><i class="bi bi-info-square-fill" style="color: #052d72;"></i></a>
+
+                                                    <div id="popup1" class="overlay">
+                                                        <div class="popup">
+                                                            <h2>تفــاصيل الميديا</h2>
+                                                            <h2>اسم الاعلان: @item.Title</h2>
+                                                            <a class="close" href="#">&times;</a>
+                                                            <div class="content">
+                                                                <table class="table table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>عدد المشاهدات</th>
+                                                                            <th> عدد المشاركات على واتساب</th>
+                                                                            <th> عدد المكالمات </th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>@item.numberShow</td>
+                                                                            <td>@item.numberOfWhatsApp</td>
+                                                                            <td>@item.numberOfCall</td>
+                                                                        </tr>
+
+                                                                    </thead>
+                                                                </table>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-gear text-success"></i></a>
+                                                    <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-file-text text-warning "></i></a>
+                                                    <a href="" class="delete-btn" data-id="@item.Id"><i class="bi bi-x-octagon-fill text-danger"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                 
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+    $('.delete-btn').click(function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "لن تتمكن من التراجع عن هذا!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم، احذفها!',
+            cancelButtonText: 'تراجع',
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/AdModels/DeleteRow',
+                    type: 'GET',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'تم الحذف!',
+                                'تم حذف العنصر بنجاح.',
+                                'success'
+                            );
+                            $('a[data-id="' + id + '"]').closest('tr').remove();
+                        } else {
+                            Swal.fire(
+                                'خطأ!',
+                                'حدث خطأ أثناء الحذف.',
+                                'error'
+                            );
+                        }
+                    }
+                });
+            }
+        });
+    });
+    });
+
+</script>
+ 
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('.selectall button.datatable-sorter').removeClass('datatable-sorter');
+
+        $('#cole').on('change', function () {
+            if ($(this).prop('checked')) {
+                $('input[type="checkbox"]').prop('checked', true);
+            } else {
+                $('input[type="checkbox"]').prop('checked', false);
+            }
+        });
+
+        // Ok adss
+        $('#confirm').on('click', function () {
+            var selectedIds = [];
+
+            var count=0
+            $('.selectedcheck:checked').each(function () {
+                var id = $(this).data('id');
+                selectedIds.push(id); 
+                count++;
+            });
+            if(count==0){
+                Swal.fire({
+                    title: "لم يتم تحديد عنصر",
+                    text: "حدد عنصر واحد على الاقل حتى يتم قبول الاعلان",
+                    icon: "question",
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'تم',
+                });
+                return;
+            }
+            
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "التأكد من قبول الاعلان بشكل رسمي",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، متأكد!',
+                cancelButtonText: 'تراجع',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdModels/ApproveAds',
+                        type: 'POST',
+                        data: { ids: selectedIds },
+                        traditional: true,
+                        success: function (response) {
+                            var clonedTrs = [];
+
+                            $('.selectedcheck:checked').each(function () {
+                                var tr = $(this).closest('tr');
+                                var clonedTr = tr.clone();
+                                clonedTr.find('td:first').remove();
+                                clonedTrs.push(clonedTr);
+                            });
+
+                            $('.selectedcheck:checked').each(function () {
+                                $(this).closest('tr').remove();
+                            });
+
+                            clonedTrs.forEach(function (clonedTr) {
+                                clonedTr.appendTo('.coooel');
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            });
+
+
+        });
+
+
+
+        $('#reject').on('click', function () {
+            var selectedIds = [];
+
+            var count = 0
+            $('.selectedcheck:checked').each(function () {
+                var id = $(this).data('id');
+                selectedIds.push(id);
+                count++;
+            });
+            if (count == 0) {
+                Swal.fire({
+                    title: "لم يتم تحديد عنصر",
+                    text: "حدد عنصر واحد على الاقل حتى يتم رفض الاعلان",
+                    icon: "question",
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'تم',
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "التأكد من الرفض بشكل رسمي",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، متأكد!',
+                cancelButtonText: 'تراجع',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdModels/RejectAds',
+                        type: 'POST',
+                        data: { ids: selectedIds },
+                        traditional: true,
+                        success: function (response) {
+                            var clonedTrs = [];
+
+                            $('.selectedcheck:checked').each(function () {
+                                var tr = $(this).closest('tr');
+                                var clonedTr = tr.clone();
+                                clonedTr.find('td:first').remove();
+                                clonedTrs.push(clonedTr);
+                            });
+
+                            $('.selectedcheck:checked').each(function () {
+                                $(this).closest('tr').remove();
+                            });
+
+                            clonedTrs.forEach(function (clonedTr) {
+                                clonedTr.appendTo('.rejecttabel');
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            });
+
+
+        });
+
+    });
+   
+   
+    
+ </script>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortButtons = document.querySelectorAll('.datatables th button.sort-btn');
+
+        sortButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const th = this.parentElement;
+                const index = Array.from(th.parentElement.children).indexOf(th);
+                const rows = Array.from(th.closest('table').querySelectorAll('tbody tr'));
+
+                const currentDirection = th.dataset.sortDirection || 'asc';
+                const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+                th.dataset.sortDirection = newDirection;
+
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.cells[index].textContent.trim();
+                    const cellB = rowB.cells[index].textContent.trim();
+
+                   
+                    if (newDirection === 'asc') {
+                        return cellA.localeCompare(cellB, 'ar');
+                    } else {
+                        return cellB.localeCompare(cellA, 'ar');
+                    }
+                });
+
+                const tbody = th.closest('table').querySelector('tbody');
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+    });
+
+
+
+        //Search Tabel
+        $(document).ready(function () {
+            $('.datatable-input').keyup(function () {
+                var searchText = $(this).val().toLowerCase();
+                var textLent = $(this).val().length;
+            $('a.page-link').removeClass('acti')
+                $('.datatables tbody tr').each(function () {
+                    var found = false;
+                    $(this).find('td').each(function () {
+                        if ($(this).text().toLowerCase().indexOf(searchText) !== -1) {
+                            found = true;
+                            return false;
+                        }
+                    });
+                    if (found) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                if ($('.datatable tbody tr:visible').length === 0) {
+                $('.no-data').css('display', 'block');
+                } else {
+                $('.no-data').css('display', 'none');
+                }
+                if (textLent == 0) {
+                    var table = $('.table.datatables');
+                    var tbody = table.find('tbody');
+                    var rows = tbody.find('tr');
+                    var rowsPerPage = 10;
+                    var currentPage = 1;
+                    var totalPages = Math.ceil(rows.length / rowsPerPage);
+
+                    function showPage(pageNum) {
+                        var rows = tbody.find('tr');
+                        var totalPages = Math.ceil(rows.length / rowsPerPage);
+
+                        var start = (pageNum - 1) * rowsPerPage;
+                        var end = start + rowsPerPage;
+
+                        rows.hide();
+                        rows.slice(start, end).show();
+                    }
+
+                    showPage(currentPage);
+                $('.no-data').css('display', 'none');
+
+                }
+            });
+
+
+
+        });
+
+ </script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('.table.datatables');
+        var tbody = table.find('tbody');
+        var rows = tbody.find('tr');
+        var rowsPerPage = 10;
+        var currentPage = 1;
+        var totalPages = Math.ceil(rows.length / rowsPerPage);
+
+        function showPage(pageNum) {
+            var rows = tbody.find('tr');
+            var totalPages = Math.ceil(rows.length / rowsPerPage);
+
+            var start = (pageNum - 1) * rowsPerPage;
+            var end = start + rowsPerPage;
+
+            rows.hide();
+            rows.slice(start, end).show();
+        }
+
+        showPage(currentPage);
+
+        var pagination = $('#datatable-pagination ul.datatable-pagination-list');
+
+        pagination.prepend(`<li class="page-item" id="prevPage"><a class="page-link" href="#">‹</a></li>`);
+
+        for (var i = 1; i <= totalPages; i++) {
+            pagination.append(`<li class="page-item"><a class="page-link" href="#">${i}</a></li>`);
+        }
+
+        pagination.append(`<li class="page-item" id="nextPage"><a class="page-link" href="#">›</li>`);
+
+        pagination.on('click', 'a.page-link', function (e) {
+            e.preventDefault();
+            var page = $(this).text();
+            $('a.page-link').removeClass('acti')
+            $(this).addClass("acti");
+            if (page === '‹') {
+                if (currentPage > 1) {
+                    currentPage--;
+                }
+            } else if (page === '›') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                }
+            } else {
+                currentPage = parseInt(page);
+            }
+            showPage(currentPage);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.fouces').click(function (e) {
+            e.preventDefault();
+            var $popup = $(this).next('.overlay');
+            $popup.css({
+                'opacity': '1',
+                'visibility': 'visible'
+            });
+        });
+
+        $('.close').click(function (e) {
+            e.preventDefault();
+           
+            $(this).closest('.overlay').css({
+                'opacity': '0',
+                'visibility': 'hidden'
+            });
+        });
+    });
+</script>
+

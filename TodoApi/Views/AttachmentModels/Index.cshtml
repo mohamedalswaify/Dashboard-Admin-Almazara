@@ -1,0 +1,43 @@
+﻿@model IEnumerable<AdminControl.Models.AttachmentModel>
+
+@{
+    ViewData["Title"] = "الفهرس";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>الملفات</h1>
+
+<p>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               الصوره
+            </th>
+            <th>
+               رقم الاعلان
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nameimage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ad.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">تحرير</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">تفاصيل</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
